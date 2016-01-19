@@ -1,0 +1,10 @@
+main
+{
+	int x;
+	x = 10;
+	print(x++)++;
+	print x;
+	print 1++;
+	x = 1++;
+	print x;
+}

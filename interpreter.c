@@ -143,7 +143,6 @@ data eval_expr(node expr, symrec ** symTable,list * routineList){
     case IN:
     {
       data e1, e2;
-      symrec * s = getSymbolFromIdentifier(expr.op[0]->value.id,symTable);
       e1 = eval(expr.op[0], symTable,routineList);
       e2.type = e1.type;
       basic b;
@@ -169,16 +168,21 @@ data eval_expr(node expr, symrec ** symTable,list * routineList){
       }
 
       e2.b = b;
+
+      if (expr.op[0]->type == identifier_type) {
+        symrec * s = getSymbolFromIdentifier(expr.op[0]->value.id,symTable);
+
+        if(s == NULL){
+          yyerror("during assignment found unknown variable");
+          exit(NO_SUCH_VARIABLE);
+        }
+        data res;
+        //else
+        if(s!=NULL){
+          res = spec_assignment(s,e2,symTable,routineList);
+        }
+      }
       //check if the variable is function
-      if(s == NULL){
-        yyerror("during assignment found unknown variable");
-        exit(NO_SUCH_VARIABLE);
-      }
-      data res;
-      //else
-      if(s!=NULL){
-        res = spec_assignment(s,e2,symTable,routineList);
-      }
       return e2;
     }
     case UMINUS:

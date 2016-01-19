@@ -29,13 +29,13 @@
 %token FLOAT_V
 %token VARIABLE
 %token WHILE IF PRINT FOR TO
-%token IN
 %nonassoc IFX ARGS
 %nonassoc ELSE
 %nonassoc CONST RECORD
 
 %left GE LE EQ NE LT GT
 %left PLUS MINUS
+%nonassoc IN
 %left MULTIPLY DIVIDE
 %left EQUALS
 %right UMINUS
@@ -181,7 +181,7 @@ expr:
         | BOOLEAN_V                                                             {$$ = constantNode(basic_boolean_value, $1);}
         | EVAL VARIABLE LP opt_actual_expr RP                                   {$$ = fpCall($2->name,$4);}
         | VARIABLE                                                              {$$ = identifierNode($1->name);}
-        | VARIABLE IN                                                           {$$ = opr(IN, 1, identifierNode($1->name));}
+        | expr IN                                                               {$$ = opr(IN, 1, $1);}
         | MINUS expr %prec UMINUS                                               {$$ = opr(UMINUS, 1, $2);}
         | expr PLUS expr                                                        {$$ = opr(PLUS,2,$1,$3);}
         | expr MINUS expr                                                       {$$ = opr(MINUS,2,$1,$3);}
