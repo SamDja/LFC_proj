@@ -1,0 +1,6 @@
+main
+{
+ bool x;
+ x++;
+ print x;
+}
